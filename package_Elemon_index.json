@@ -22,7 +22,7 @@
           "size": "54119",
           "boards": [
             {
-              "name": "atmel_samd21_xpro_v1"
+              "name": "EESA-IOT 5.0"
             }
           ],
           "toolsDependencies":
