@@ -18,8 +18,8 @@
           "category": "Contributed",
           "url": "https://github.com/MauricioJancic/Elemon/blob/master/Elemon.tar.bz2",
           "archiveFileName": "Elemon.tar.bz2",
-          "checksum": "SHA-256:b83b94fa73749131e23012ffbf46c8a1bc05c9ebd838e198ab31b8b2d1ea9f6f",
-          "size": "54119",
+          "checksum": "SHA-256:559ec2c431b28f29dcb2b21d1822268d7e280fe4f91c38a691ef8d61119e3fe5",
+          "size": "50418",
           "boards": [
             {
               "name": "atmel_samd21_xpro_v1"
