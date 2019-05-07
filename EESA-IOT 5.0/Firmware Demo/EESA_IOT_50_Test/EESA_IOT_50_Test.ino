@@ -1,5 +1,7 @@
 #include <SerialRAM.h>
 
+#include <SPI.h>
+
 // Macros
 #define debugSerial SerialUSB
 #define loraSerial Serial1
@@ -14,26 +16,26 @@ static char responses[MAX_RESPONSES][RESPONSE_LEN];
 SerialRAM ram;
 
 /*
- * Vacia el buffer de recepcion desde el modulo ESP32
- */
+   Vacia el buffer de recepcion desde el modulo ESP32
+*/
 void esp32ClearReadBuffer()
 {
-  while(esp32Serial.available())
+  while (esp32Serial.available())
     esp32Serial.read();
 }
 
 /*
- * Vacia el buffer de recepcion desde el modulo LoRa
- */
+   Vacia el buffer de recepcion desde el modulo LoRa
+*/
 void loraClearReadBuffer()
 {
-  while(loraSerial.available())
+  while (loraSerial.available())
     loraSerial.read();
 }
 
 /*
- * Espera las respuestas del modulo ESP32 y las imprime en el puerto de debug
- */
+   Espera las respuestas del modulo ESP32 y las imprime en el puerto de debug
+*/
 int esp32WaitForResponses(int timeout)
 {
   size_t read = 0;
@@ -55,7 +57,7 @@ int esp32WaitForResponses(int timeout)
       if (strcmp(responses[i], "SEND OK") == 0) {
         return i;
       }
-      if (i < MAX_RESPONSES-1)
+      if (i < MAX_RESPONSES - 1)
         i++;
     }
     else if (read == 0) {
@@ -66,14 +68,14 @@ int esp32WaitForResponses(int timeout)
 }
 
 /*
- * Espera la respuesta del modulo LoRa y la imprime en el puerto de debug
- */
+   Espera la respuesta del modulo LoRa y la imprime en el puerto de debug
+*/
 void loraWaitResponse(int timeout)
 {
   size_t read = 0;
 
   loraSerial.setTimeout(timeout);
-  
+
   read = loraSerial.readBytesUntil('\n', response, RESPONSE_LEN);
   if (read > 0) {
     response[read - 1] = '\0'; // set \r to \0
@@ -84,8 +86,8 @@ void loraWaitResponse(int timeout)
 }
 
 /*
- * Envia un comando al modulo ESP32 y espera la respuesta
- */
+   Envia un comando al modulo ESP32 y espera la respuesta
+*/
 void esp32SendCommand(char *command, int timeout)
 {
   esp32ClearReadBuffer();
@@ -95,8 +97,8 @@ void esp32SendCommand(char *command, int timeout)
 }
 
 /*
- * Envia un comando al modulo LoRa y espera la respuesta
- */
+   Envia un comando al modulo LoRa y espera la respuesta
+*/
 void loraSendCommand(char *command, int timeout)
 {
   loraClearReadBuffer();
@@ -114,7 +116,12 @@ void setup()
   pinMode(loraReset, OUTPUT);
   digitalWrite(PIN_LED, HIGH);
   digitalWrite(loraReset, LOW);
-  
+
+  Serial2.begin(9600);
+  Serial3.begin(600);
+
+  SPI.begin();
+
   loraSerial.begin(57600);
   esp32Serial.begin(115200);
   debugSerial.begin(9600);
@@ -135,7 +142,7 @@ void setup()
 
   delay(8000);
   digitalWrite(PIN_LED, LOW);
-  
+
   debugSerial.println("********************");
   debugSerial.println("*   EESA-IOT 5.0   *");
   debugSerial.println("********************");
@@ -166,7 +173,7 @@ void loop()
 {
   uint8_t x = 0;
   char s[30];
-  
+
   digitalWrite(PIN_LED, LOW);
   debugSerial.println("---------------------- EESA-IOT 5.0 WiFi+BLE ESP32 ---------");
   esp32SendCommand("AT+GMR", 1000);
@@ -179,10 +186,48 @@ void loop()
   x = ram.read(0x0100);
   sprintf(s, "EERAM read: %d", x);
   debugSerial.println(s);
-  ram.write(0x0100, x+1);
+  ram.write(0x0100, x + 1);
   debugSerial.println("");
-  
+
   delay(400);
   digitalWrite(PIN_LED, HIGH);
   delay(500);
+
+
+  if (Serial2.available() > 0 ) {
+
+    int a = Serial2.read();
+    if ( a == 0x02 ) {
+      debugSerial.println("======================");
+      debugSerial.println("Loop on Serial2 ");
+      debugSerial.println("======================");
+    }
+  }
+
+  if (Serial3.available() > 0 ) {
+    int c = Serial3.read();
+
+    if ( c == 0xAA ) {
+      debugSerial.println("======================");
+      debugSerial.println("Loop on Serial3 ");
+      debugSerial.println("======================");
+    }
+  }
+
+  int b = 0;
+  SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
+  b = SPI.transfer(0x05);
+  SPI.endTransaction();
+
+  if ( b == 0x05 ) {
+    debugSerial.println("======================");
+    debugSerial.println("Loop on SPI port ");
+    debugSerial.println("======================");
+  }
+
+  delay(1000);
+
+  Serial2.write(0x02);
+  Serial3.write(0xAA);
+
 }
