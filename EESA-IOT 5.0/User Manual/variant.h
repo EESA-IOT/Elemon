@@ -38,6 +38,7 @@
 
 #ifdef __cplusplus
 #include "SERCOM.h"
+
 #include "Uart.h"
 #endif // __cplusplus
 
@@ -119,39 +120,38 @@ static const uint8_t A5  = PIN_A5 ;
 #define PAD_SERIAL1_RX       (SERCOM_RX_PAD_1)
 #define PAD_SERIAL1_TX       (UART_TX_PAD_0)
 
+// Serial2
+#define PIN_SERIAL2_RX       (39ul)					// PORTA 16  ---> J7 PIN 10	
+#define PIN_SERIAL2_TX       (40ul)					// PORTA 18  ---> J7 PIN 12
+#define PAD_SERIAL2_RX       (SERCOM_RX_PAD_0)
+#define PAD_SERIAL2_TX       (UART_TX_PAD_2)
+
+// Serial3
+#define PIN_SERIAL3_RX       (35ul)					// PORTA 05   ---> J6 PIN 4	
+#define PIN_SERIAL3_TX       (34ul)					// PORTA 06   ---> J6 PIN 2
+#define PAD_SERIAL3_RX       (SERCOM_RX_PAD_0)
+#define PAD_SERIAL3_TX       (UART_TX_PAD_2)		
+
+
 /*
  * SPI Interfaces
  */
-#define SPI_INTERFACES_COUNT 3
+#define SPI_INTERFACES_COUNT 1
 
-#define PIN_SPI_MOSI         (34ul)
-#define PIN_SPI_MISO         (35ul)
-#define PIN_SPI_SCK          (36ul)
-#define PIN_SPI_SS           (37ul)
-#define PERIPH_SPI           sercom0
-#define PAD_SPI_TX           SPI_PAD_2_SCK_3
-#define PAD_SPI_RX           SERCOM_RX_PAD_0
 
-#define PIN_SPI1_MOSI        (39ul)
-#define PIN_SPI1_MISO        (40ul)
-#define PIN_SPI1_SCK         (41ul)
-#define PIN_SPI1_SS          (42ul)
-#define PERIPH_SPI1          sercom1
-#define PAD_SPI1_TX          SPI_PAD_2_SCK_3
-#define PAD_SPI1_RX          SERCOM_RX_PAD_0
+#define PIN_SPI_MOSI        (44ul)					// J9 PIN 7	
+#define PIN_SPI_MISO        (45ul)					// J9 PIN 5	
+#define PIN_SPI_SCK         (46ul)					// J9 PIN 8	
+#define PIN_SPI_SS          (47ul)					// J9 PIN 6
+#define PERIPH_SPI          sercom5
+#define PAD_SPI_TX          SPI_PAD_2_SCK_3
+#define PAD_SPI_RX          SERCOM_RX_PAD_0
 
-#define PIN_SPI2_MOSI        (44ul)
-#define PIN_SPI2_MISO        (45ul)
-#define PIN_SPI2_SCK         (46ul)
-#define PIN_SPI2_SS          (47ul)
-#define PERIPH_SPI2          sercom5
-#define PAD_SPI2_TX          SPI_PAD_2_SCK_3
-#define PAD_SPI2_RX          SERCOM_RX_PAD_0
 
-static const uint8_t SS	  = PIN_SPI_SS ;
+/*static const uint8_t SS	  = PIN_SPI_SS ;
 static const uint8_t MOSI = PIN_SPI_MOSI ;
 static const uint8_t MISO = PIN_SPI_MISO ;
-static const uint8_t SCK  = PIN_SPI_SCK ;
+static const uint8_t SCK  = PIN_SPI_SCK ;*/
 
 // Needed for WINC1501B (WiFi101) library (plugged to port EXT2)
 // --------------------------------------
@@ -204,6 +204,9 @@ extern SERCOM sercom5;
 extern Uart Serial;
 extern Uart Serial1;
 
+extern Uart Serial2;
+extern Uart Serial3;
+
 #endif
 
 // These serial port names are intended to allow libraries and architecture-neutral
@@ -228,4 +231,3 @@ extern Uart Serial1;
 #define SERIAL_PORT_HARDWARE_OPEN   Serial1
 
 #endif /* _VARIANT_ATMEL_SAMD21_XPRO_ */
-
