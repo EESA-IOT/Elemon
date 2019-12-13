@@ -194,7 +194,7 @@ void loop()
   delay(500);
 
 
-  if (Serial2.available() > 0 ) {
+  while (Serial2.available() > 0 ) {
 
     int a = Serial2.read();
     if ( a == 0x02 ) {
@@ -204,7 +204,7 @@ void loop()
     }
   }
 
-  if (Serial3.available() > 0 ) {
+  while (Serial3.available() > 0 ) {
     int c = Serial3.read();
 
     if ( c == 0xAA ) {
